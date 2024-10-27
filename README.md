@@ -1,4 +1,4 @@
-The Python scripts in this repository were run using the latest version of 3.12.
+The Python scripts in this repository were run using Python v.3.9.
 
 To run the Python script variant_search.py, the following libraries need to be installed:
 
@@ -26,7 +26,9 @@ matplotlib.pyplot and matplotlib.colors v.3.4.2 - https://matplotlib.org/stable/
   Reference: J. D. Hunter, "Matplotlib: A 2D Graphics Environment", Computing in Science & Engineering, vol. 9, no. 3, pp. 90-95, 2007.
 
 
-To run the Python script ibdseq.py, the following built-in library is requied
+To run the Python script ibdseq.py, the following built-in library is required:
 
 bisect - https://docs.python.org/3/library/bisect.html
 
+
+The bash script generate_ibds.sh was run using the bash version 5.0.17(1).
