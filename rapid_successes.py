@@ -1,33 +1,18 @@
 #!/usr/bin/python3
 
 # This script is used to plot graphs for the accuracy and power metrics of RaPID
-# with different window sizes, and compared to FastSMC's default parameters.
+# with different window sizes, number of runs and number of successes.
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Define the value of the genotype error rate. This value can be changed
-error_rate = "0.1"
-
-# Define the list of threshold values
-thresholds = [0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 1]
-
-# Load data from the six IBD benchmark output files
-file_paths = [
-    "1/rapid_" + error_rate + "_error/{}_1.max.IBD_BM_Result.txt",
-    "3/rapid_" + error_rate + "_error/{}_3.max.IBD_BM_Result.txt",
-    "fastsmc/fastsmc_" + error_rate + "_error/{}_FastSMC_eur." 
-        + error_rate + ".ibd.IBD_BM_Result.txt",
-    "5/rapid_" + error_rate + "_error/{}_5.max.IBD_BM_Result.txt",
-    "30/rapid_" + error_rate + "_error/{}_30.max.IBD_BM_Result.txt"
-]
-
-# Read only the lines which contain the numerical data to plot the graph
+# Read only the lines which contain the numerical data to plot the graph.
 def read_lines(file_path):
     '''
     Read specific lines from a file and extract numerical data.
 
     :param file_path: The path to the input file containing IBD benchmark result
+    
     :return: A list containing numerical data from specific lines in the file
     '''
     lines_to_read = [3, 6, 9, 12, 15, 18, 21]
@@ -38,6 +23,22 @@ def read_lines(file_path):
         ]
     return lines
 
+# Define the value of the genotype error rate. This value can be changed.
+error_rate = "0.01"
+
+# Define the list of threshold values
+thresholds = [0.9]
+
+# Define the file paths for the four data files
+file_paths = [
+    f"./{error_rate}_error/w3s4.max.IBD_BM_Result.txt",
+    f"./{error_rate}_error/w3s7.max.IBD_BM_Result.txt",
+    f"./{error_rate}_error/w5s4.max.IBD_BM_Result.txt",
+    f"./{error_rate}_error/w5s7.max.IBD_BM_Result.txt",
+    f"./{error_rate}_error/w3s2.max.IBD_BM_Result.txt",
+    f"./{error_rate}_error/w5s2.max.IBD_BM_Result.txt"
+]
+
 # Headings for the 7 accuracy and power metric subplots
 headings = [
     "Accuracy", "Length Accuracy", "Length Discrepancy", "Recall", 
@@ -45,17 +46,15 @@ headings = [
 ]
 
 # Simplified names for plot legend
-legend_names = [
-    "1_RaPID", "3_RaPID", "FastSMC", "5_RaPID", "30_RaPID"
-]
+legend_names = ["w3s4", "w3s7", "w5s4", "w5s7", "w3s2", "w5s2"]
 
 # Corresponding markers and linestyles, one for each tool
-markers = ["o", "^", "s", "x", "*"]
-linestyles = ["-", "--", "-.", ":", "--"]
+markers = ["o", "^", "s", "x", "*", "v"]
+linestyles = ["-", "--", "-.", ":", "--", "dotted"]
 
 for threshold in thresholds:
     # Set up the subplots in a single figure, arranged in a 2x4 grid
-    fig, axes = plt.subplots(2, 4, figsize = (20, 10))
+    fig, axes = plt.subplots(2, 4, figsize=(20, 10))
     
     # Flatten the 2D array of axes into a 1D array for easier indexing
     axes = axes.flatten()
@@ -73,9 +72,9 @@ for threshold in thresholds:
             ]
 
             if heading == "Length Discrepancy":
-                # Set y-axis ticks from 1 to 16 with 1 intervals.
+                # Set y-axis ticks from 1 to 16 with 1 intervals
                 axes[i].set_yticks(np.arange(0, 16, 1))
-                axes[i].set_ylim(0, 16) # Set y-axis limits to 1 to 16
+                axes[i].set_ylim(0, 16) # Set y-axis limits to 1 to 16.
             else:
                 # Set y-axis ticks from 0.0 to 1.2 with 0.2 intervals
                 axes[i].set_yticks(np.arange(0.0, 1.2, 0.2))
@@ -97,10 +96,10 @@ for threshold in thresholds:
             else:
                 axes[i].set_ylabel("Precentage Decimal (% / 100)")
                 
-    # Remove the empty subplot that is generated.
+    # Remove the empty subplot that is generated
     fig.delaxes(axes[-1])
     
-    # Create a legend for the figure.
+    # Create legend for the figure.
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc = "lower right", fontsize = "14")
     
@@ -111,6 +110,6 @@ for threshold in thresholds:
     )
     
     plt.tight_layout()  # Adjust layout for better spacing
-    plt.savefig(f"{error_rate}error_{threshold}.png") # Save the plot
-    plt.close()  # Close the plot to save memory
+    plt.savefig(f"./{error_rate}_error/{threshold}.png") # Save the plots
+    plt.close()  # Close the plots to save memory
 

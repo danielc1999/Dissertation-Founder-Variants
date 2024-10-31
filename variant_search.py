@@ -89,7 +89,8 @@ def find_variant_individuals(vcf_file, chr_num, bp_pos, ref_allele, alt_allele):
 
                 break   # Break the loop once the variant is processed
 
-    return individuals_with_variant, homo_ref_samples, hetero_samples, homo_alt_samples
+    return individuals_with_variant, homo_ref_samples, hetero_samples, \
+    homo_alt_samples
 
 # Function to find segments with the variant from IBD file
 def find_segments_with_variant(ibd_file, individuals_with_variant, bp_pos):
@@ -163,8 +164,8 @@ def read_data_and_find_common_positions(segments_with_variant):
     return data, start, end
 
 def plot_horizontal_bars(
-        data, start, end, chr_num, bp_pos, ref_allele, alt_allele, chunk_index, 
-        homo_ref_samples, hetero_samples, homo_alt_samples
+    data, start, end, chr_num, bp_pos, ref_allele, alt_allele, chunk_index, 
+    homo_ref_samples, hetero_samples, homo_alt_samples
 ):
     '''
     Plots horizontal bars to represent the IBD segments that go through the
@@ -207,25 +208,52 @@ def plot_horizontal_bars(
 
         # Determine color based on individual statuses
         if is_homo_alt_1 and is_homo_alt_2:
-            ax1.barh(i, end_position - start_position + 1, left = start_position, height = 0.6, color = "red")
+            ax1.barh(
+                i, end_position - start_position + 1, left = start_position, 
+                height = 0.6, color = "red"
+            )
 
         elif is_homo_ref_1 and is_homo_ref_2:
-            ax1.barh(i, end_position - start_position + 1, left = start_position, height = 0.6, color = "blue")
+            ax1.barh(
+                i, end_position - start_position + 1, left = start_position, 
+                height = 0.6, color = "blue"
+            )
 
         elif is_hetero_1 and is_hetero_2:
-            ax1.barh(i, end_position - start_position + 1, left = start_position, height = 0.6, color = "yellow")
+            ax1.barh(
+                i, end_position - start_position + 1, left = start_position, 
+                height = 0.6, color = "yellow"
+            )
 
         elif (is_homo_alt_1 and is_homo_ref_2) or (is_homo_ref_1 and is_homo_alt_2):
-            ax1.barh(i - 0.15, end_position - start_position + 1, left=start_position, height = 0.3, color = "red")  # Top half
-            ax1.barh(i + 0.15, end_position - start_position + 1, left=start_position, height = 0.3, color = "blue")   # Bottom half
+            ax1.barh(
+                i - 0.15, end_position - start_position + 1, 
+                left = start_position, height = 0.3, color = "red"
+            )  # Top half
+            ax1.barh(
+                i + 0.15, end_position - start_position + 1, 
+                left = start_position, height = 0.3, color = "blue"
+            )   # Bottom half
 
         elif (is_homo_alt_1 and is_hetero_2) or (is_hetero_1 and is_homo_alt_2):
-            ax1.barh(i - 0.15, end_position - start_position + 1, left=start_position, height = 0.3, color = "red")  # Top half
-            ax1.barh(i + 0.15, end_position - start_position + 1, left=start_position, height = 0.3, color = "yellow")   # Bottom half
+            ax1.barh(
+                i - 0.15, end_position - start_position + 1, 
+                left = start_position, height = 0.3, color = "red"
+            )  # Top half
+            ax1.barh(
+                i + 0.15, end_position - start_position + 1, 
+                left = start_position, height = 0.3, color = "yellow"
+            )   # Bottom half
 
         elif (is_hetero_1 and is_homo_ref_2) or (is_homo_ref_1 and is_hetero_2):
-            ax1.barh(i - 0.15, end_position - start_position + 1, left=start_position, height = 0.3, color = "yellow")  # Top half
-            ax1.barh(i + 0.15, end_position - start_position + 1, left=start_position, height = 0.3, color = "blue")   # Bottom half
+            ax1.barh(
+                i - 0.15, end_position - start_position + 1, 
+                left = start_position, height = 0.3, color = "yellow"
+            )  # Top half
+            ax1.barh(
+                i + 0.15, end_position - start_position + 1, 
+                left = start_position, height = 0.3, color = "blue"
+            )   # Bottom half
 
     ax1.axvspan(start, end + 1, facecolor = "orange", alpha = 0.5)
 
@@ -261,8 +289,8 @@ def plot_horizontal_bars(
 
     # Set the title for the plot
     plt.title(
-    f"IBD Segments for for chr{chr_num}, {bp_pos}, {ref_allele} > {alt_allele}", 
-    fontsize = 18
+        f"IBD Segments for for chr{chr_num}, {bp_pos}, {ref_allele} > {alt_allele}", 
+        fontsize = 18
     )
 
     plt.grid(True)  # Apply a grid to the plot
@@ -270,7 +298,7 @@ def plot_horizontal_bars(
 
     # Ensure the directory exists before saving the plot
     output_dir = os.path.join(
-            ".", f"chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}"
+        ".", f"chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}"
     )
     os.makedirs(output_dir, exist_ok = True)
 
@@ -284,7 +312,7 @@ def plot_horizontal_bars(
     return None
 
 def create_microarray_heatmap(
-            vcf_file, start, end, chr_num, bp_pos, ref_allele, alt_allele
+    vcf_file, start, end, chr_num, bp_pos, ref_allele, alt_allele
 ):
     '''
     Plots microarray heatmaps for all of the individuals in the dataset
@@ -357,7 +385,7 @@ def create_microarray_heatmap(
 
     # Identify positions that occur more than once (for indels)
     duplicate_positions = {
-            pos for pos, count in position_count.items() if count > 1
+        pos for pos, count in position_count.items() if count > 1
     }
 
     # Filter out variants with duplicate positions
@@ -564,7 +592,7 @@ def create_microarray_heatmap(
     plt.savefig(
       os.path.join(
         output_dir, 
-      f"microarray_heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png", 
+            f"microarray_heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png", 
         )
     )
     plt.close()

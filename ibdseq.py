@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 
 # This script calculates the centiMorgan distance of IBD segments for IBDSeq's 
-# .ibd files by using a genetic map. It also changes the format of the
-# output to match Hap-IBD's parser for the IBD Benchmark tool.
+# .ibd files by using a genetic map. It also changes the format of the output
+# to match Hap-IBD's parser for the IBD Benchmark tool.
 
 import bisect
 
 def find_closest_genetic_map_position(
-        genomic_position, genomic_positions, map_lines
-        ):
+    genomic_position, genomic_positions, map_lines
+):
     '''
     Find the closest genetic map position for a given genomic position.
     
@@ -17,7 +17,8 @@ def find_closest_genetic_map_position(
     
     :param genomic_position: The genomic basepair position to search for.
     :param map_lines: The respective closest genomic basepair position.
-    :return: returns the closest basepair positions
+    
+    :return: Returns the closest basepair positions.
     '''
     index = bisect.bisect_left(genomic_positions, genomic_position)
 
@@ -35,6 +36,7 @@ def find_closest_genetic_map_position(
                         ) else right_position
 
     closest_position = closest_position.split("\t")
+    
     return int(closest_position[1]), float(closest_position[3])
 
 # Load the genetic map file
@@ -45,39 +47,38 @@ with open("genetic_map_GRCh37_chr20.txt", "r") as map_file:
 # Create genomic positions list outside the loop
 genomic_positions = [int(line.split("\t")[1]) for line in map_lines]
 
-# Write the results to the output file immediately after calculation
-with open("modified_ibdseq_eur.0.1.ibd", "w") as output_file:
-    with open("ibdseq_eur.0.1.ibd", "r") as ibd_file:   # Load the IBD file
+# Load the IBD file
+with open("ibdseq_eur.0.1.ibd", "r") as ibd_file:
+    # Write the results to the output file immediately after calculation
+    with open("modified_ibdseq_eur.0.1.ibd", "w") as output_file:
         for line in ibd_file:
             # Split the line into individual values
             values = line.split("\t")
 
             # Assign values to variables based on the desired indices
-            ID1_idx, Hap1_idx, ID2_idx, Hap2_idx, chromosome, \
-                PhyStart_idx, PhyEnd_idx = 0, 1, 2, 3, 4, 5, 6
+            id1, hap1, id2, hap2, chromosome, start, end = 0, 1, 2, 3, 4, 5, 6
 
             # Extract the relevant values
-            ID1, Hap1, ID2, Hap2, chrom, PhyStart, PhyEnd = (
-                values[ID1_idx], values[Hap1_idx], values[ID2_idx],
-                values[Hap2_idx], values[chromosome], values[PhyStart_idx],
-                values[PhyEnd_idx]
+            id1, hap1, id2, hap2, chromosome, start, end = (
+                values[id1], values[hap1], values[id2], values[hap2], 
+                values[chromosome], values[start], values[end]
             )
 
             # Find the closest genetic map positions for the start and
             # end coordinates
-            genomic_start = int(PhyStart)
-            genomic_end = int(PhyEnd)
+            genomic_start = int(start)
+            genomic_end = int(end)
 
             closest_start_position, closest_start_map = (
                 find_closest_genetic_map_position(
-                        genomic_start, genomic_positions, map_lines
-                        )
+                    genomic_start, genomic_positions, map_lines
+                    )
             )
 
             closest_end_position, closest_end_map = (
                 find_closest_genetic_map_position(
-                        genomic_end, genomic_positions, map_lines
-                        )
+                    genomic_end, genomic_positions, map_lines
+                    )
             )
 
             # Calculate centimorgan distance for the IBD segments
@@ -85,7 +86,7 @@ with open("modified_ibdseq_eur.0.1.ibd", "w") as output_file:
 
             # Write the formatted line to the output file immediately
             output_file.write(
-                f"{ID1}\t{Hap1}\t{ID2}\t{Hap2}\t{chrom}\t{PhyStart}"
-                f"\t{PhyEnd}\t{centimorgan_distance}\n"
+                f"{id1}\t{hap1}\t{id2}\t{hap2}\t{chromosome}\t{start}"
+                f"\t{end}\t{centimorgan_distance}\n"
             )
 
