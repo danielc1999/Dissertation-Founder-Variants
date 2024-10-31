@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script is used to automatically generate IBD segments using RaPID for each chromosome. The chromosome number needs to be specified by the user while executing the script.
+
 # Check if chromosome number is provided
 if [ -z "$1" ]; then
     echo "Usage: $0 <chromosome_number>"
@@ -9,7 +11,7 @@ fi
 # Set the chromosome number from the first argument
 chromosome=$1
 
-# Filter by chromosome and individuals using vcftools.
+# Filter by chromosome using VCFtools.
 vcftools --vcf unphased_merged_relabelled_VCF.recode.vcf --chr chr${chromosome} --recode --out chr${chromosome}.unphased
 echo "Filtering by chromosome and individuals complete."
 
@@ -25,10 +27,11 @@ python filter_mapping_file.py genetic_maps/genetic_map_GRCh38_chr${chromosome}.t
 python interpolate_loci.py filtered_chr${chromosome}_map.txt ../chr${chromosome}.phased.recode.vcf.gz chr${chromosome}_map
 echo "Interpolation of loci complete."
 
-# Perform RaPID IBD detection.
+# Perform RaPID IBD detection using its optimal parameters. The centiMorgan threshold parameter (-d) can be adjusted.
 ./RaPID_v.1.7 -w 5 -r 10 -s 2 -d 0.5 -i ../chr${chromosome}.phased.recode.vcf.gz -g chr${chromosome}_map -o ../chr${chromosome}.phased
 echo "RaPID IBD detection complete."
 
+# Sort the generated files into respective directories on a chromosomal basis.
 cd
 mkdir chromosome${chromosome}
 
