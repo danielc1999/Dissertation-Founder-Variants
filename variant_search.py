@@ -592,7 +592,7 @@ def create_microarray_heatmap(
     plt.savefig(
       os.path.join(
         output_dir, 
-            f"microarray_heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png", 
+            f"heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png", 
         )
     )
     plt.close()
@@ -728,7 +728,7 @@ def create_mini_microarray(
     plt.savefig(
         os.path.join(
             output_dir, 
-          f"mini_microarray_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png"
+          f"mini_heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png"
         )
     )
     plt.close()
