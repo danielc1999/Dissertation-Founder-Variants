@@ -905,25 +905,34 @@ def plot_reference_vs_variant_allele(
     ]
     genotypes = filtered_genotypes
 
-    # Find the index of the variant position
+    # Identify the phase (left or right) of the variant of interest for each sample
     variant_index = positions.index(int(bp_pos))
+    phased_side = []
 
     # Filter genotypes for individuals with "1" allele
     individuals_with_variant = {
-     sample_names[i] for i, g in enumerate(genotypes[variant_index]) if "1" in g
+        sample_names[i] for i, g in enumerate(genotypes[variant_index]) if "1" in g
     }
 
     variant_alleles_by_position = defaultdict(lambda: defaultdict(int))
 
+    for i, g in enumerate(genotypes[variant_index]):
+        alleles = g.split("|")
+        if "1" in alleles:
+            # Store the side (0 for left, 1 for right)
+            phased_side.append(alleles.index("1"))
+        else:
+            phased_side.append(None)  # No "1" allele present in this sample
+
+    # Count alleles only if they are on the same phased side as the variant of interest
     for i, sample in enumerate(sample_names):
         if sample in individuals_with_variant:
             for pos_idx in range(len(positions)):
                 alleles = genotypes[pos_idx][i].split("|")
-                if "1" in alleles:
+                if phased_side[i] is not None and alleles[phased_side[i]] == "1":
                     variant_alleles_by_position[positions[pos_idx]][alternates[pos_idx]] += 1
 
     # Identify alleles present in the majority of individuals (90% of them)
-    # Value can be changed
     required_count = int(len(individuals_with_variant) * 0.9)
     variant_framework = defaultdict(list)
 
