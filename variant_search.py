@@ -2,7 +2,7 @@
 
 # This script is used to read variant information and search for IBD segments
 # that go through this position. The start and end basepair positions of the
-# segments will be used to plot horizontal bar plots, heatmaps and variant 
+# segments will be used to plot horizontal bar plots, heatmaps and variant
 # frameworks.
 
 import random
@@ -311,11 +311,11 @@ def plot_horizontal_bars(
 
     return None
 
-def create_microarray_heatmap(
+def create_heatmap(
     vcf_file, start, end, chr_num, bp_pos, ref_allele, alt_allele
 ):
     '''
-    Plots microarray heatmaps for all of the individuals in the dataset
+    Plots heatmaps for all of the individuals in the dataset
     showcasing the common basepair positions of the segments.
 
     :param vcf_file: The path to the VCF file.
@@ -332,6 +332,7 @@ def create_microarray_heatmap(
     chromosome number, variant reference allele, variant alternate
     allele and output directory path.
     '''
+
     # Read all sample IDs from the VCF file header and store their
     # respective indices, genotypes, reference and alternate alleles
     #  at each position.
@@ -590,9 +591,9 @@ def create_microarray_heatmap(
 
     # Save the heatmap as a .png
     plt.savefig(
-      os.path.join(
-        output_dir, 
-            f"heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png", 
+        os.path.join(
+            output_dir, 
+            f"heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png"
         )
     )
     plt.close()
@@ -601,8 +602,8 @@ def create_microarray_heatmap(
     homo_alt_samples, hetero_samples, homo_ref_samples, sorted_samples, \
     sorted_indices, chr_num, ref_allele, alt_allele, output_dir
 
-def create_mini_microarray(
-    positions, genotypes, bp_pos, homo_alt_samples, hetero_samples,  
+def create_mini_heatmap(
+    positions, genotypes, bp_pos, homo_alt_samples, hetero_samples, 
     homo_ref_samples, sorted_samples, sorted_indices, chr_num, ref_allele, 
     alt_allele
 ):
@@ -728,7 +729,7 @@ def create_mini_microarray(
     plt.savefig(
         os.path.join(
             output_dir, 
-          f"mini_heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png"
+            f"mini_heatmap_chr{chr_num}_{bp_pos}_{ref_allele}_{alt_allele}.png"
         )
     )
     plt.close()
@@ -760,6 +761,7 @@ def plot_reference_vs_variant_allele(
 
     :return: None.
     '''
+
     chr_num, bp_pos, ref_allele, alt_allele = variant
     sample_names = homo_alt_samples + hetero_samples + homo_ref_samples
 
@@ -791,7 +793,7 @@ def plot_reference_vs_variant_allele(
 
         else:
             # Dictionary to store inserion counts
-            insertion_counts = defaultdict(int) 
+            insertion_counts = defaultdict(int)
             # Dictionary to store deletion counts
             deletion_counts = defaultdict(int)
 
@@ -1053,11 +1055,12 @@ def plot_reference_vs_variant_allele(
         ):
             # Writes the alleles in full rather than using the short version
             full_ref_allele = filtered_references[positions.index(pos)]
-            full_common_allele = variant_framework[pos]
+          #  full_common_allele = variant_framework[pos]
+            full_common_allele = filtered_alternates[positions.index(pos)]
             f.write(f"{pos:<15}{full_ref_allele:<20}{full_common_allele}\n")
 
     print(
-    f"Variant framework sequences have been written to files in {output_dir}.\n"
+        f"Variant framework sequences have been written to files in {output_dir}.\n"
     )
 
     return None
@@ -1121,24 +1124,24 @@ def main():
             segments_with_variant
         )
 
-        # Call the function for the creation of the microarray heatmap
-        create_microarray_heatmap(
+        # Call the function for the creation of the heatmap
+        create_heatmap(
             vcf_file, start, end, chr_num, bp_pos, ref_allele, alt_allele
         )
 
-        mini_array = False
+        mini_heatmap = True
 
-        if mini_array:
+        if mini_heatmap:
             positions, genotypes, references, alternates, bp_pos, \
             homo_alt_samples, hetero_samples, homo_ref_samples, sorted_samples, \
-            sorted_indices, chr_num, ref_allele, alt_allele = \
-            create_microarray_heatmap(
+            sorted_indices, chr_num, ref_allele, alt_allele, output_dir = \
+            create_heatmap(
                 vcf_file, start, end, chr_num, bp_pos, ref_allele, alt_allele
             )
 
-            create_mini_microarray(
+            create_mini_heatmap(
                 positions, genotypes, bp_pos, homo_alt_samples, hetero_samples, 
-                homo_ref_samples, sorted_samples, sorted_indices, chr_num, \
+                homo_ref_samples, sorted_samples, sorted_indices, chr_num, 
                 ref_allele, alt_allele
             )
 
@@ -1156,7 +1159,7 @@ def main():
         positions, genotypes, references, alternates, bp_pos, homo_alt_samples, \
         hetero_samples, homo_ref_samples, sorted_samples, sorted_indices, \
         chr_num, ref_allele, alt_allele, output_dir = \
-        create_microarray_heatmap(
+        create_heatmap(
             vcf_file, start, end, chr_num, bp_pos, ref_allele, alt_allele
         )
 
