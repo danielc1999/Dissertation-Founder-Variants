@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script is used to automatically generate IBD segments using RaPID for each chromosome. The chromosome number needs to be specified by the user while executing the script.
+# This script is used to automatically generate IBD segments using RaPID for each chromosome. This also includes filtering by chromosome, genotype phasing with Beagle and directory sorting. The chromosome number needs to be specified by the user while executing the script.
 
 # Check if chromosome number is provided
 if [ -z "$1" ]; then
