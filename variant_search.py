@@ -289,7 +289,7 @@ def plot_horizontal_bars(
 
     # Set the title for the plot
     plt.title(
-        f"IBD Segments for for chr{chr_num}, {bp_pos}, {ref_allele} > {alt_allele}", 
+        f"IBD Segments for chr{chr_num}, {bp_pos}, {ref_allele} > {alt_allele}", 
         fontsize = 18
     )
 
