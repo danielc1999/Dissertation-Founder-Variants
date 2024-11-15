@@ -261,9 +261,10 @@ def plot_horizontal_bars(
     bp_pos_int = int(bp_pos)
 
     # Set a consistent x-axis range of 500,000 basepairs each side of bp_pos
-    x_min = bp_pos_int - 500000
-    x_max = bp_pos_int + 500000
-    ax1.set_xlim(x_min, x_max)
+    # Can be turned on by removing the "#" in front of code.
+    #x_min = bp_pos_int - 500000
+    #x_max = bp_pos_int + 500000
+    #ax1.set_xlim(x_min, x_max)
 
     # Global x-axis setup
     ax1.set_yticks(np.arange(len(data)))
